@@ -16,7 +16,7 @@ A CRM (Customer Relationship Management) REST API built with .NET 10, designed a
 | Database (Prod) | SQL Server on Azure |
 | Auth | JWT Bearer |
 | Validation | FluentValidation |
-| Mapping | AutoMapper |
+| Mapping | Mapster |
 | Logging | Serilog (Console + File sinks) |
 | Docs | Scalar |
 | Containers | Docker + Docker Compose |
