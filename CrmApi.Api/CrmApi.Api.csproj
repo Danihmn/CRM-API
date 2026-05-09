@@ -24,13 +24,4 @@
     <PackageReference Include="Scalar.AspNetCore" Version="2.14.11" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Infrastructure\Configuration\" />
-    <Folder Include="Infrastructure\Data\DTOs\Responses\" />
-    <Folder Include="Infrastructure\Data\DTOs\Requests\" />
-    <Folder Include="Infrastructure\Services\" />
-    <Folder Include="Endpoints\" />
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>

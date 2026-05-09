@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -9,7 +8,7 @@ namespace CrmApi.Api.Migrations
     public partial class AdicionaTabelasIniciais : Migration
     {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
+        protected override void Up (MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
                 name: "Companies",
@@ -85,7 +84,7 @@ namespace CrmApi.Api.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
+        protected override void Down (MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Companies");
