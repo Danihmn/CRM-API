@@ -5,10 +5,10 @@ services:
       context: .
       dockerfile: CrmApi.Api/Dockerfile
     depends_on:
-      sqlserver:
+      crmapi.db:
         condition: service_healthy
 
-  sqlserver:
+  crmapi.db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       SA_PASSWORD: ${SA_PASSWORD}

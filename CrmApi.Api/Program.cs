@@ -1,5 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDatabaseConfiguration(builder.Configuration);
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
