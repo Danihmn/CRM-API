@@ -1,0 +1,6 @@
+services:
+  crmapi.api:
+    image: ${DOCKER_REGISTRY-}crmapiapi
+    build:
+      context: .
+      dockerfile: CrmApi.Api/Dockerfile
