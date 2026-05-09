@@ -5,6 +5,7 @@
         public void Configure (EntityTypeBuilder<User> builder)
         {
             builder.Property(user => user.Role).HasConversion<string>();
+            builder.HasIndex(user => user.Email).IsUnique();
         }
     }
 }
