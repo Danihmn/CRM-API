@@ -10,7 +10,8 @@
             {
                 var token = await authService.RegisterAsync(request);
                 return Results.Ok(token);
-            }).WithDescription("Registra novo usuário e retorna Token");
+            }).WithDescription("Registra novo usuário e retorna Token").RequireAuthorization(policy =>
+            policy.RequireRole("Admin", "Manager"));
 
             group.MapPost("/login", async (LoginRequestDTO request, IAuthService authService) =>
             {
