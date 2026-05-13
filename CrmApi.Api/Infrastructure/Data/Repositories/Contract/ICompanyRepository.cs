@@ -1,8 +1,8 @@
 ﻿namespace CrmApi.Api.Infrastructure.Data.Repositories.Contract
 {
-    public interface ICompanyRepository : IRepository<Company>
+    public interface ICompanyRepository : IRepository<CompanyEntity>
     {
-        Task<Company?> GetByCNPJAsync (string cnpj);
-        Task<IEnumerable<Company>> GetBySegmentAsync (string segment);
+        Task<CompanyEntity?> GetByCNPJAsync (string cnpj);
+        Task<IEnumerable<CompanyEntity>> GetBySegmentAsync (string segment);
     }
 }

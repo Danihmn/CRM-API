@@ -1,6 +1,6 @@
 ﻿namespace CrmApi.Api.Domain.Entities
 {
-    public class Contract : Base
+    public class ContractEntity : Base
     {
         [MaxLength(150)]
         public required string Title { get; set; }

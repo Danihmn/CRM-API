@@ -36,7 +36,7 @@
             if (existingCompany != null)
                 throw new InvalidOperationException($"Company with CNPJ {request.CNPJ} already exists.");
 
-            var newCompany = new Company
+            var newCompany = new CompanyEntity
             {
                 CorporateName = request.CorporateName,
                 CNPJ = request.CNPJ,
@@ -52,7 +52,7 @@
         {
             var existingCompany = await repository.GetByIdAsync(id)
                 ?? throw new NotFoundException($"Company with id {id} not found.");
-            var newCompany = new Company
+            var newCompany = new CompanyEntity
             {
                 CorporateName = request.CorporateName,
                 CNPJ = request.CNPJ,
@@ -66,9 +66,8 @@
 
         public async Task DeleteAsync (int id)
         {
-            var existingCompany = await repository.GetByIdAsync(id);
-            if (existingCompany != null)
-                throw new NotFoundException($"Company with id {id} not found.");
+            _ = await repository.GetByIdAsync(id)
+                ?? throw new NotFoundException($"Company with id {id} not found.");
 
             await repository.DeleteAsync(id);
         }

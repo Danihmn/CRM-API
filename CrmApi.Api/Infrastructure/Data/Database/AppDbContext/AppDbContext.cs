@@ -2,10 +2,10 @@
 {
     public class AppDbContext (DbContextOptions<AppDbContext> options) : DbContext(options)
     {
-        public DbSet<Company> Companies { get; set; }
-        public DbSet<Contact> Contacts { get; set; }
-        public DbSet<Contract> Contracts { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<CompanyEntity> Companies { get; set; }
+        public DbSet<ContactEntity> Contacts { get; set; }
+        public DbSet<ContractEntity> Contracts { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
 
         protected override void OnModelCreating (ModelBuilder modelBuilder)
         {

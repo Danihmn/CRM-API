@@ -1,6 +1,6 @@
 ﻿namespace CrmApi.Api.Domain.Entities
 {
-    public class Company : Base
+    public class CompanyEntity : Base
     {
         [MaxLength(150)]
         public required string CorporateName { get; set; }

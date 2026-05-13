@@ -2,6 +2,6 @@
 {
     public interface ITokenService
     {
-        TokenResponseDTO GenerateToken (User user);
+        TokenResponseDTO GenerateToken (UserEntity user);
     }
 }

@@ -2,7 +2,7 @@
 {
     public class TokenService (TokenConfiguration configuration) : ITokenService
     {
-        public TokenResponseDTO GenerateToken (User user)
+        public TokenResponseDTO GenerateToken (UserEntity user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.SecretKey));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

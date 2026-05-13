@@ -5,7 +5,7 @@
     {
         public async Task<TokenResponseDTO> RegisterAsync (RegisterRequestDTO request)
         {
-            var user = new User()
+            var user = new UserEntity()
             {
                 Name = request.Name,
                 Email = request.Email,

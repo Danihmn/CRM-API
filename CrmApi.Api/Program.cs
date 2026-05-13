@@ -15,10 +15,14 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 
 #region Repositories DI
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+builder.Services.AddScoped<IContactRepository, ContactRepository>();
+builder.Services.AddScoped<IContractRepository, ContractRepository>();
 #endregion
 
 #region Services DI
 builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<IContactService, ContactService>();
+builder.Services.AddScoped<IContractService, ContractService>();
 #endregion
 
 builder.Services.AddAuthorization();
@@ -34,8 +38,12 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+#region Map Endpoints
 app.MapAuthEndpoints();
 app.MapCompanyEndpoints();
+app.MapContactEndpoints();
+app.MapContractEndpoints();
+#endregion
 
 app.UseScalarDocumentation();
 

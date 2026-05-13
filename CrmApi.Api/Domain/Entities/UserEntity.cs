@@ -1,6 +1,6 @@
 ﻿namespace CrmApi.Api.Domain.Entities
 {
-    public class User : Base
+    public class UserEntity : Base
     {
         [MaxLength(100)]
         public required string Name { get; set; }
