@@ -35,6 +35,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapAuthEndpoints();
+app.MapCompanyEndpoints();
 
 app.UseScalarDocumentation();
 
