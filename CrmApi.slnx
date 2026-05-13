@@ -1,6 +1,3 @@
 <Solution>
   <Project Path="CrmApi.Api/CrmApi.Api.csproj" />
-  <Project Path="docker-compose.dcproj">
-    <Build />
-  </Project>
 </Solution>
