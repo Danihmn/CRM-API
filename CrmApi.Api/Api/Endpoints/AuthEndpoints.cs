@@ -1,4 +1,4 @@
-﻿namespace CrmApi.Api.Endpoints
+﻿namespace CrmApi.Api.Api.Endpoints
 {
     public static class AuthEndpoints
     {
