@@ -1,4 +1,5 @@
-﻿global using CrmApi.Api.Api.Exceptions;
+﻿global using CrmApi.Api.Api.Endpoints;
+global using CrmApi.Api.Api.Exceptions;
 global using CrmApi.Api.Domain.Entities;
 global using CrmApi.Api.Domain.Enums;
 global using CrmApi.Api.Infrastructure.Auth.Configurations;
@@ -15,7 +16,9 @@ global using CrmApi.Api.Infrastructure.Services.Contract;
 global using CrmApi.Api.Infrastructure.Services.Implementation;
 global using Mapster;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.AspNetCore.Diagnostics;
 global using Microsoft.AspNetCore.Identity;
+global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.IdentityModel.Tokens;

@@ -107,7 +107,7 @@ namespace CrmApi.Api.Infrastructure.Services.Implementation
                 ?? throw new NotFoundException($"Contract with id {id} not found.");
 
             if (!_allowedTransitions[existing.Status].Contains(request.NewStatus))
-                throw new InvalidOperationException(
+                throw new BusinessRuleException(
                     $"Transition from {existing.Status} to {request.NewStatus} is not allowed.");
 
             await repository.UpdateStatusAsync(id, request.NewStatus);
