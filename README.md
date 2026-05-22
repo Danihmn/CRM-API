@@ -10,8 +10,6 @@ REST API for CRM (Customer Relationship Management) built with .NET 10. Portfoli
 - **Auth:** JWT Bearer
 - **Validation:** FluentValidation
 - **Docs:** Scalar
-- **Logging:** Serilog
-- **Deploy:** Azure App Service via GitHub Actions → Docker Hub
 
 ## Domain
 
@@ -67,7 +65,11 @@ PATCH  /contracts/{id}/status
 
 2. Start SQL Server:
    ```bash
-   docker-compose up sqlserver -d
+   docker run -e "ACCEPT_EULA=Y" \
+    -e "SA_PASSWORD=YourPassword@Here" \
+    -p 1433:1433 \
+    --name sqlserver \
+    -d mcr.microsoft.com/mssql/server:2022-latest
    ```
 
 3. Apply migrations:
@@ -87,5 +89,3 @@ API docs available at `/scalar` in development.
 ```
 Endpoints → DTOs → Services → Repositories → Database
 ```
-
-No Controllers — routes mapped directly in Endpoint classes. No CQRS or Unit of Work — EF Core's DbContext handles it natively.
