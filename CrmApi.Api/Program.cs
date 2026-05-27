@@ -12,9 +12,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 #endregion
 
 #region Repositories DI
-builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
-builder.Services.AddScoped<IContactRepository, ContactRepository>();
-builder.Services.AddScoped<IContractRepository, ContractRepository>();
+builder.Services.AddTransient<ICompanyRepository, CompanyRepository>();
+builder.Services.AddTransient<IContactRepository, ContactRepository>();
+builder.Services.AddTransient<IContractRepository, ContractRepository>();
 #endregion
 
 #region Services DI
