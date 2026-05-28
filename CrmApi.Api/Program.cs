@@ -11,17 +11,8 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 #endregion
 
-#region Repositories DI
-builder.Services.AddTransient<ICompanyRepository, CompanyRepository>();
-builder.Services.AddTransient<IContactRepository, ContactRepository>();
-builder.Services.AddTransient<IContractRepository, ContractRepository>();
-#endregion
-
-#region Services DI
-builder.Services.AddScoped<ICompanyService, CompanyService>();
-builder.Services.AddScoped<IContactService, ContactService>();
-builder.Services.AddScoped<IContractService, ContractService>();
-#endregion
+builder.Services.AddRepositories();
+builder.Services.AddServices();
 
 #region .NET Pipelines
 builder.Services.AddAuthorization();
@@ -39,12 +30,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-#region Map Endpoints
-app.MapAuthEndpoints();
-app.MapCompanyEndpoints();
-app.MapContactEndpoints();
-app.MapContractEndpoints();
-#endregion
+app.MapEndpoits();
 
 app.UseScalarDocumentation();
 

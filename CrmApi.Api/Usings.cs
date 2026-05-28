@@ -12,6 +12,7 @@ global using CrmApi.Api.Infrastructure.Data.DTOs.Responses;
 global using CrmApi.Api.Infrastructure.Data.Repositories.Contract;
 global using CrmApi.Api.Infrastructure.Data.Repositories.Generic;
 global using CrmApi.Api.Infrastructure.Data.Repositories.Implementation;
+global using CrmApi.Api.Infrastructure.Extensions;
 global using CrmApi.Api.Infrastructure.Services.Contract;
 global using CrmApi.Api.Infrastructure.Services.Implementation;
 global using Mapster;
