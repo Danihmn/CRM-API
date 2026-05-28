@@ -2,7 +2,7 @@
 {
     public static class EndpointsExtension
     {
-        public static WebApplication MapEndpoits (this WebApplication app)
+        public static WebApplication MapEndpoints (this WebApplication app)
         {
             app.MapAuthEndpoints();
             app.MapCompanyEndpoints();

@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-A CRM (Customer Relationship Management) REST API built with .NET 10, designed as a portfolio project. The API manages clients, companies, and contracts with status workflows.
+A CRM (Customer Relationship Management) REST API built with .NET 10, designed as a portfolio project. The API manages contacts, companies, and contracts with status workflows.
 
 ---
 
@@ -17,7 +17,6 @@ A CRM (Customer Relationship Management) REST API built with .NET 10, designed a
 | Auth | JWT Bearer |
 | Validation | FluentValidation |
 | Mapping | Mapster |
-| Logging | Serilog (Console + File sinks) |
 | Docs | Scalar |
 | Containers | Docker + Docker Compose |
 | CI/CD | GitHub Actions → Docker Hub → Azure App Service |
@@ -34,6 +33,7 @@ Endpoints → DTOs → Services → Repository → Database
 - **No CQRS** — not necessary for this scope
 - **No Unit of Work** — EF Core's DbContext already implements it natively
 - **Minimal API** — no Controllers, routes mapped directly in Endpoint classes
+- **Generic Repository** — `Repository<TEntity>` base with CRUD; specific repos extend it
 
 ---
 
@@ -43,59 +43,114 @@ Endpoints → DTOs → Services → Repository → Database
 CrmApi/
 ├── CrmApi.slnx
 └── CrmApi.Api/
-    ├── Endpoints/
-    │   ├── ContactEndpoints.cs
-    │   ├── CompanyEndpoints.cs
-    │   └── ContractEndpoints.cs
-    ├── DTOs/
-    │   ├── Requests/
-    │   └── Responses/
-    ├── Services/
-    │   ├── Interfaces/
-    │   └── Implementations/
-    ├── Repositories/
-    │   ├── Interfaces/
-    │   └── Implementations/
-    ├── Models/
-    │   ├── Contact.cs
-    │   ├── Company.cs
-    │   ├── Contract.cs
-    │   └── User.cs
-    ├── Data/
-    │   └── AppDbContext.cs
-    ├── Migrations/
-    ├── Middlewares/
+    ├── Api/
+    │   ├── Endpoints/
+    │   │   ├── AuthEndpoints.cs
+    │   │   ├── CompanyEndpoints.cs
+    │   │   ├── ContactEndpoints.cs
+    │   │   └── ContractEndpoints.cs
+    │   └── Exceptions/
+    │       ├── NotFoundException.cs
+    │       ├── BusinessRuleException.cs
+    │       └── GlobalExceptionHandler.cs
+    ├── Domain/
+    │   ├── Entities/
+    │   │   ├── Base.cs                  # abstract — Id + CreatedAt
+    │   │   ├── CompanyEntity.cs
+    │   │   ├── ContactEntity.cs
+    │   │   ├── ContractEntity.cs
+    │   │   └── UserEntity.cs
+    │   └── Enums/
+    │       ├── EContractStatus.cs
+    │       └── EUserRole.cs
+    ├── Infrastructure/
+    │   ├── Auth/
+    │   │   ├── Configurations/
+    │   │   │   └── TokenConfiguration.cs
+    │   │   └── Services/
+    │   │       ├── Contract/            # interfaces
+    │   │       │   ├── IPasswordHasherService.cs
+    │   │       │   └── ITokenService.cs
+    │   │       └── Implementation/
+    │   │           ├── PasswordHasherService.cs
+    │   │           └── TokenService.cs
+    │   ├── Configuration/
+    │   │   ├── AuthConfiguration.cs
+    │   │   ├── DatabaseConfiguration.cs
+    │   │   └── ScalarConfiguration.cs
+    │   ├── Data/
+    │   │   ├── Database/
+    │   │   │   ├── AppDbContext/
+    │   │   │   │   └── AppDbContext.cs
+    │   │   │   └── Configurations/      # IEntityTypeConfiguration<T>
+    │   │   │       ├── ContractConfiguration.cs
+    │   │   │       └── UserConfiguration.cs
+    │   │   ├── DTOs/
+    │   │   │   ├── Requests/
+    │   │   │   └── Responses/
+    │   │   └── Repositories/
+    │   │       ├── Contract/            # interfaces
+    │   │       │   ├── ICompanyRepository.cs
+    │   │       │   ├── IContactRepository.cs
+    │   │       │   └── IContractRepository.cs
+    │   │       ├── Generic/
+    │   │       │   ├── IRepository.cs
+    │   │       │   └── Repository.cs
+    │   │       └── Implementation/
+    │   │           ├── CompanyRepository.cs
+    │   │           ├── ContactRepository.cs
+    │   │           └── ContractRepository.cs
+    │   ├── Extensions/
+    │   │   ├── ConfigurationsExtension.cs   # AddConfigurations()
+    │   │   ├── EndpointsExtension.cs        # MapEndpoints()
+    │   │   ├── RepositoriesExtension.cs     # AddRepositories()
+    │   │   └── ServicesExtension.cs         # AddServices()
+    │   ├── Migrations/
+    │   └── Services/
+    │       ├── Contract/                # interfaces
+    │       │   ├── IAuthService.cs
+    │       │   ├── ICompanyService.cs
+    │       │   ├── IContactService.cs
+    │       │   └── IContractService.cs
+    │       └── Implementation/
+    │           ├── AuthService.cs
+    │           ├── CompanyService.cs
+    │           ├── ContactService.cs
+    │           └── ContractService.cs
     ├── Program.cs
+    ├── Usings.cs
     ├── appsettings.json
     ├── appsettings.Development.json
     ├── appsettings.Production.json
     ├── Dockerfile
     ├── docker-compose.yml
-    └── .env                  # never commit — in .gitignore
+    └── .env                             # never commit — in .gitignore
 ```
 
 ---
 
 ## Domain Entities
 
-### Company
+All entities inherit `Base` (abstract): `Id` (int), `CreatedAt` (DateTime UTC).
+
+### CompanyEntity
 ```
-Id, Name, CNPJ, Segment, Website, CreatedAt
+CorporateName, CNPJ, Segment, WebSite?
 ```
 
-### Contact
+### ContactEntity
 ```
-Id, Name, Email, Phone, Position, CompanyId, CreatedAt
-```
-
-### Contract
-```
-Id, Title, Value, Status, StartDate, EndDate, ContactId, CompanyId, CreatedAt
+Name, Email, Phone, Position, CompanyId
 ```
 
-### User
+### ContractEntity
 ```
-Id, Name, Email, PasswordHash, Role, CreatedAt
+Title, Value (decimal 18,2), Status (EContractStatus), StartDate, EndDate?, ContactId, CompanyId
+```
+
+### UserEntity
+```
+Name, Email, PasswordHash, Role (EUserRole)
 ```
 
 ---
@@ -117,14 +172,14 @@ Draft → Active → Suspended → Completed
                            → Cancelled
 ```
 
-Status transitions are handled via a dedicated `PATCH /contracts/{id}/status` endpoint.
+Status transitions handled via `PATCH /contracts/{id}/status`.
 
 ---
 
 ## API Endpoints
 
 ```
-POST   /auth/register
+POST   /auth/register    (requires Admin or Manager role)
 POST   /auth/login
 
 GET    /contacts
@@ -149,6 +204,22 @@ PATCH  /contracts/{id}/status
 
 ---
 
+## Exception Handling
+
+`GlobalExceptionHandler` (implements `IExceptionHandler`) maps exceptions to HTTP status codes:
+
+| Exception | Status |
+|---|---|
+| `NotFoundException` | 404 |
+| `BusinessRuleException` | 409 |
+| `UnauthorizedAccessException` | 401 |
+| `ArgumentOutOfRangeException` | 400 |
+| `KeyNotFoundException` | 404 |
+| `ValidationException` | 400 |
+| Default | 500 |
+
+---
+
 ## NuGet Packages
 
 ```
@@ -156,12 +227,9 @@ Microsoft.EntityFrameworkCore
 Microsoft.EntityFrameworkCore.SqlServer
 Microsoft.EntityFrameworkCore.Design
 Microsoft.AspNetCore.Authentication.JwtBearer
-AutoMapper
-FluentValidation
+Microsoft.AspNetCore.OpenApi
+Mapster
 FluentValidation.AspNetCore
-Serilog.AspNetCore
-Serilog.Sinks.Console
-Serilog.Sinks.File
 Scalar.AspNetCore
 ```
 
@@ -217,7 +285,7 @@ Password:  CrmApi@Dev#2025!
 
 ### Production (Azure)
 
-> Connection string stored in Azure App Service environment variables — never in code or appsettings.Production.json committed to the repo.
+Connection string stored in Azure App Service environment variables — never in code or committed files.
 
 ---
 
@@ -243,29 +311,13 @@ Push to main
 
 ---
 
-## Development Order
-
-1. Project setup + folder structure
-2. Models + EF Core DbContext
-3. Migrations + first database creation
-4. Auth (JWT — register/login)
-5. Companies CRUD (no dependencies)
-6. Contacts CRUD (depends on Company)
-7. Contracts CRUD + status flow (depends on both)
-8. FluentValidation on all DTOs
-9. Serilog configuration
-10. Scalar documentation
-11. Dockerfile + docker-compose
-12. GitHub Actions CI/CD pipeline
-13. Deploy to Azure App Service
-
----
-
 ## Important Decisions
 
 - **Minimal API** over Controllers — cleaner, more modern .NET style
 - **No Unit of Work** — EF Core DbContext covers this natively
 - **No CQRS** — overkill for 3 entities
+- **Generic Repository** — `Repository<TEntity>` reduces boilerplate; specific repos extend only when needed
+- **Mapster** over AutoMapper — less config, better performance
 - **Docker Hub** over Azure Container Registry — free tier, no extra cost
 - **SQL Server on Azure** — created upfront to avoid migration work later
 - **`.env` file** for local secrets, **Azure App Service config** for production secrets
