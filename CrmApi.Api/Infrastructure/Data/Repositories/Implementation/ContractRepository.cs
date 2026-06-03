@@ -3,16 +3,23 @@ namespace CrmApi.Api.Infrastructure.Data.Repositories.Implementation
     public class ContractRepository (AppDbContext context) : Repository<ContractEntity>(context), IContractRepository
     {
         public async Task<IEnumerable<ContractEntity>> GetByStatusAsync (EContractStatus status)
-            => await context.Contracts.Where(contract => contract.Status == status).ToListAsync();
+            => await context.Contracts
+            .AsNoTracking()
+            .Where(contract => contract.Status == status)
+            .ToListAsync();
 
         public async Task<IEnumerable<ContractEntity>> GetByCompanyAsync (int companyId)
-            => await context.Contracts.Where(contract => contract.CompanyId == companyId).ToListAsync();
+            => await context.Contracts
+            .AsNoTracking()
+            .Where(contract => contract.CompanyId == companyId)
+            .ToListAsync();
 
         public async Task<IEnumerable<ContractEntity>> GetByContactAsync (int contactId)
-            => await context.Contracts.Where(contract => contract.ContactId == contactId).ToListAsync();
+            => await context.Contracts.AsNoTracking().Where(contract => contract.ContactId == contactId).ToListAsync();
 
         public async Task<IEnumerable<ContractEntity>> GetExpiredAsync ()
             => await context.Contracts
+                .AsNoTracking()
                 .Where(contract => (contract.Status == EContractStatus.Active || contract.Status == EContractStatus.Suspended)
                          && contract.EndDate != null
                          && contract.EndDate < DateTime.UtcNow)

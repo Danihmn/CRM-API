@@ -4,7 +4,7 @@
     {
         private readonly DbSet<TEntity> _dbSet = context.Set<TEntity>();
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync () => await _dbSet.ToListAsync();
+        public async Task<IEnumerable<TEntity>> GetAllAsync () => await _dbSet.AsNoTracking().ToListAsync();
 
         public async Task<TEntity?> GetByIdAsync (int id) => await _dbSet.FindAsync(id);
 
